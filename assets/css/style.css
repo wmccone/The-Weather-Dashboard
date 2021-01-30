@@ -1,0 +1,10 @@
+.title{
+    text-align: center;
+    background-color: gray;
+    color: beige;
+}
+
+#city-list{
+    text-align: left;
+    font-size: 26px;
+}
