@@ -15,10 +15,10 @@
     <div class="container p-0">
         <div class="row gx-5">
             <aside class="col-md-3 ps-0">
-                <div id="citysearch" class="py-4">
+                <div id="city-form" class="py-4">
                     <h2>Search for a City:</h2>
                     <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <input id="city-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </div>
                 <div>
@@ -38,7 +38,7 @@
                 <div class="row py-4">
                     <div class="card p-3">
                         <div id="current-city-weather" class="col-md-7">
-                            <h3><span id="currentcity">Placeholder city</span><span id="currentdate">(mm/dd/yyyy)</span><i id="currentweather">@!</i></h3>
+                            <h3><span id="currentcity"></span><span id="currentdate">(mm/dd/yyyy)</span><i id="currentweather"></i></h3>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     Temperature: <span id="cur-temp"></span>
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
