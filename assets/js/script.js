@@ -1,3 +1,4 @@
+$(document).ready(function (){
 //Create Element selectors to write content to the page
 var cityFormEl = document.querySelector("#city-form");
 var recentCityList = document.querySelector("#city-list")
@@ -8,22 +9,25 @@ var currentTempurature = document.querySelector("#cur-temp")
 var currentHumidity = document.querySelector("#cur-humid")
 var currentWindSpeed = document.querySelector("#cur-wndspeed")
 var currentUVIndex = document.querySelector("#cur-UV")
-var currentDateEl = document.querySelector("#currentDate")
+var currentDateEl = document.querySelector("#currentdate")
 var currentWeatherEl = document.querySelector("#currentweather")
+var dateVar = moment().format("MMM Do YY");
 
 
 //Element selectors for the 5 day forecast
 
+var storageArray = JSON.parse(localStorage.getItem("searchcity")) || []
 
 var apiKey = "86be0edea7b654b425b0a2a7b7fa2fe5"
+
 //Create a function that prints the weather to the page 
 function printCurrentWeather(result) {
     console.log(result)
-    currentCityName.textContent= result.name
+    currentCityName.textContent = result.name +": "
     currentTempurature.textContent = result.main.temp
     currentHumidity.textContent = result.main.humidity
     currentWindSpeed.textContent = result.wind.speed
-    // currentDateEl.textContent = moment().format('MMMM Do YYYY, h:mm:ss a')
+    currentDateEl.textContent = dateVar
     currentWeatherEl.textContent = result.weather.icon
 }
 
@@ -33,108 +37,138 @@ function printCurrentUV(result) {
     // currentDateEl.textContent = result.date
     console.log(uvIndex)
     // uvIndex = Math.floor(uvIndex)
-    if (uvIndex < 3){
+    if (uvIndex < 3) {
         currentUVIndex.setAttribute("class", "badge bg-success")
     }
-    if (3<uvIndex<8) {
-        currentUVIndex.setAttribute("class", "badge bg-warning")
-    }
-    if (uvIndex>8){
+    else if (uvIndex > 8) {
         currentUVIndex.setAttribute("class", "badge bg-danger")
     }
-}
-// function printForecast(result){
-//     for (var i=0; i<5;i++){
-//         var weatherCard = document.querySelector("#"+i)
-//         //CONTINUE WRITIN PRINT FORECAST FROM THIS POINT
-//     }
-
-
-// }
-
-//This function is going to search Open weather for the UV index
-function searchUVAPI(lat,lon){
-    var locationURL = "http://api.openweathermap.org/data/2.5/uvi?lat="+lat+"&lon="+lon+"&appid="+apiKey
-
-    fetch(locationURL)
-    .then(function(response){
-        if(!response.ok){
-            throw response.json();
-        }
-
-        return response.json();
-    })
-
-    .then(function(locationres){
-        printCurrentUV(locationres)
-    })
-}
-
-//This function is going to search open weather for the 5 day forecast
-function searchForecast(city){
-    var locationURL = "https://api.openweathermap.org/data/2.5/forecast?q="+cityName+"&units=imperial"+"&appid="+apiKey
-    fetch(locationURL)
-    .then(function(response){
-        if(!response.ok){
-            throw response.json();
-        }
-
-        return response.json();
-    })
-
-    .then(function(locationres){
-        printForecast(locationres)
-    })
-}
-
-
-// This function is going to search the Open Weather API for the fields associated with the city
-function searchWeatherApi(query){
-    var cityName = query
-    var locationURL = "https://api.openweathermap.org/data/2.5/weather?q="+cityName+"&units=imperial"+"&appid="+apiKey
-
-    console.log(locationURL)
-    fetch(locationURL)
-    .then(function(response){
-        if(!response.ok){
-            throw response.json();
-        }
-
-        return response.json();
-    })
-    .then(function (locationres){
-        console.log(locationres)
-        if(!locationres){
-            console.log("no results found")
-        }
-        else {
-            // for (var i=0; i<1; i++){
-                searchUVAPI(locationres.coord.lat, locationres.coord.lon)
-                // searchForecast(cityName)
-                printCurrentWeather(locationres)
-            // }
-        }
-    })
-    .catch(function (error){
-        console.error(error);
-    });
-
-}
-
-// This function is going to allow the user to submit a city to the page
-function citySearchFormSubmit(event){
-    event.preventDefault();
-    var cityInputVal = document.querySelector("#city-input").value;
-    // If the user does not input anything into the form thow back an error
-    if (!cityInputVal){
-    console.error("input a value")
-    return;
+    else {
+        currentUVIndex.setAttribute("class", "badge bg-warning")
     }
-    var localKey = cityInputVal + "button"
-    //Continue Writing LOCAL STORAGE FROM THIS POINT
-
-    // localStorage.setItem(localKey, cityInputVal)
-    searchWeatherApi(cityInputVal)
 }
-// This line will listen for city to be submitted in the form.
-cityFormEl.addEventListener("submit", citySearchFormSubmit)
+function printForecast(result) {
+    for (var i = 0; i < result.list.length; i += 8) {
+        var weatherCard = document.querySelector("#" + i)
+        //CONTINUE WRITIN PRINT FORECAST FROM THIS POINT
+    }
+
+
+    }
+
+    //This function is going to search Open weather for the UV index
+    function searchUVAPI(lat, lon) {
+        var locationURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey
+
+        fetch(locationURL)
+            .then(function (response) {
+                if (!response.ok) {
+                    throw response.json();
+                }
+
+                return response.json();
+            })
+
+            .then(function (locationres) {
+                printCurrentUV(locationres)
+            })
+    }
+
+    //This function is going to search open weather for the 5 day forecast
+    function searchForecast(city) {
+        var locationURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey
+        fetch(locationURL)
+            .then(function (response) {
+                if (!response.ok) {
+                    throw response.json();
+                }
+
+                return response.json();
+            })
+
+            .then(function (locationres) {
+                // printForecast(locationres)
+                console.log(locationres)
+            })
+    }
+
+
+    // This function is going to search the Open Weather API for the fields associated with the city
+    function searchWeatherApi(query) {
+        var cityName = query
+        var locationURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial" + "&appid=" + apiKey
+
+        searchForecast(query)
+        console.log(locationURL)
+        fetch(locationURL)
+            .then(function (response) {
+                if (!response.ok) {
+                    throw response.json();
+                }
+
+                return response.json();
+            })
+            .then(function (locationres) {
+                console.log(locationres)
+                if (!locationres) {
+                    console.log("no results found")
+                }
+                else {
+                    // for (var i=0; i<1; i++){
+                    searchUVAPI(locationres.coord.lat, locationres.coord.lon)
+                    printCurrentWeather(locationres)
+                    // }
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+
+    }
+
+    function createNewButton() {
+        recentCityList.innerHTML =""
+        for (var i = 0; i < storageArray.length; i++) {
+            
+            var newLineEl = document.createElement("li")
+            // newLineEl.setAttribute("id", ke)
+            newLineEl.setAttribute("class", "list-group-item")
+            var keyEl = document.createElement("button")
+            keyEl.textContent = storageArray[i]
+            newLineEl.appendChild(keyEl)
+            recentCityList.appendChild(newLineEl)
+        }
+        recentCityList.addEventListener("click", function(event){
+            searchWeatherApi(event.target.textContent)
+        })
+    
+    }
+
+    // This function is going to allow the user to submit a city to the page
+    function citySearchFormSubmit(event) {
+        event.preventDefault();
+        var cityInputVal = document.querySelector("#city-input").value;
+        // If the user does not input anything into the form thow back an error
+        if (!cityInputVal) {
+            console.error("input a value")
+            return;
+        }
+        var localKey = cityInputVal + "element"
+
+        if (storageArray.length === 7){
+            storageArray.pop()
+            storageArray.unshift(cityInputVal)
+        }
+        else if (storageArray.length < 8 && !storageArray.includes(cityInputVal)){
+        storageArray.unshift(cityInputVal)
+        }
+
+        localStorage.setItem("searchcity", JSON.stringify(storageArray))
+        createNewButton()
+        searchWeatherApi(cityInputVal)
+
+    }
+    // This line will listen for city to be submitted in the form.
+    cityFormEl.addEventListener("submit", citySearchFormSubmit)
+    createNewButton()
+})
