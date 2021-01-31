@@ -1,4 +1,4 @@
-$(document).ready(function (){
+
 //Create Element selectors to write content to the page
 var cityFormEl = document.querySelector("#city-form");
 var recentCityList = document.querySelector("#city-list")
@@ -11,10 +11,12 @@ var currentWindSpeed = document.querySelector("#cur-wndspeed")
 var currentUVIndex = document.querySelector("#cur-UV")
 var currentDateEl = document.querySelector("#currentdate")
 var currentWeatherEl = document.querySelector("#currentweather")
-var dateVar = moment().format("MMM Do YY");
+var dateVar = moment().format('L');
 
 
 //Element selectors for the 5 day forecast
+var forecastEl = document.querySelector("#forecast-bar")
+
 
 var storageArray = JSON.parse(localStorage.getItem("searchcity")) || []
 
@@ -24,11 +26,13 @@ var apiKey = "86be0edea7b654b425b0a2a7b7fa2fe5"
 function printCurrentWeather(result) {
     console.log(result)
     currentCityName.textContent = result.name +": "
-    currentTempurature.textContent = result.main.temp
-    currentHumidity.textContent = result.main.humidity
-    currentWindSpeed.textContent = result.wind.speed
+    currentTempurature.textContent = result.main.temp +"°F"
+    currentHumidity.textContent = result.main.humidity+"%"
+    currentWindSpeed.textContent = result.wind.speed+" MPH"
     currentDateEl.textContent = dateVar
-    currentWeatherEl.textContent = result.weather.icon
+    console.log(result.weather[0].icon)
+    var iconLoc = "http://openweathermap.org/img/wn/"+result.weather[0].icon+"@2x.png"
+    currentWeatherEl.setAttribute("src",iconLoc)
 }
 
 function printCurrentUV(result) {
@@ -48,9 +52,35 @@ function printCurrentUV(result) {
     }
 }
 function printForecast(result) {
+    forecastEl.innerHTML =""
     for (var i = 0; i < result.list.length; i += 8) {
-        var weatherCard = document.querySelector("#" + i)
-        //CONTINUE WRITIN PRINT FORECAST FROM THIS POINT
+    
+        var weatherCard = document.createElement("div")
+        weatherCard.setAttribute("class","card me-3")
+        weatherCard.setAttribute("style","width: 150px")
+        var forecastBody = document.createElement("div")
+        forecastBody.setAttribute("class","card-body")
+        weatherCard.appendChild(forecastBody)
+        var forecastDate = document.createElement("h6")
+        forecastDate.textContent = moment().add((i/8)+1, "day").format("L");
+        forecastDate.setAttribute("class", "card-title")
+        forecastBody.appendChild(forecastDate)
+        var forecastIcon = document.createElement("img")
+        var iconLoc = "http://openweathermap.org/img/wn/"+result.list[i].weather[0].icon+"@2x.png"
+        forecastIcon.setAttribute("src", iconLoc)
+        forecastBody.appendChild(forecastIcon)
+        var forecastTemp = document.createElement("p")
+        forecastTemp.textContent = "Temp: "+ result.list[i].main.temp
+        forecastTemp.setAttribute("class", "card-text")
+        forecastBody.appendChild(forecastTemp)
+        var forecastHum = document.createElement("p")
+        forecastHum.textContent = "Humidity: "+ result.list[i].main.humidity
+        forecastHum.setAttribute("class", "card-text")
+        forecastBody.appendChild(forecastHum)
+        forecastEl.appendChild(weatherCard)
+
+
+
     }
 
 
@@ -87,7 +117,7 @@ function printForecast(result) {
             })
 
             .then(function (locationres) {
-                // printForecast(locationres)
+                printForecast(locationres)
                 console.log(locationres)
             })
     }
@@ -171,4 +201,3 @@ function printForecast(result) {
     // This line will listen for city to be submitted in the form.
     cityFormEl.addEventListener("submit", citySearchFormSubmit)
     createNewButton()
-})
