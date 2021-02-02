@@ -162,8 +162,9 @@ function printForecast(result) {
             
             var newLineEl = document.createElement("li")
             // newLineEl.setAttribute("id", ke)
-            newLineEl.setAttribute("class", "list-group-item")
+            newLineEl.setAttribute("class", "list-group-item d-grid gap-2")
             var keyEl = document.createElement("button")
+            keyEl.setAttribute("class","btn btn-primary")
             keyEl.textContent = storageArray[i]
             newLineEl.appendChild(keyEl)
             recentCityList.appendChild(newLineEl)
@@ -171,6 +172,7 @@ function printForecast(result) {
         recentCityList.addEventListener("click", function(event){
             searchWeatherApi(event.target.textContent)
         })
+        searchWeatherApi(storageArray[0])
     
     }
 
@@ -194,8 +196,8 @@ function printForecast(result) {
         }
 
         localStorage.setItem("searchcity", JSON.stringify(storageArray))
-        createNewButton()
-        searchWeatherApi(cityInputVal)
+        createNewButton(cityInputVal)
+        // searchWeatherApi(cityInputVal)
 
     }
     // This line will listen for city to be submitted in the form.
