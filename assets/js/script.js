@@ -30,7 +30,7 @@ function printCurrentWeather(result) {
     currentHumidity.textContent = "Humidity : " + result.main.humidity + "%"
     currentWindSpeed.textContent = "Wind Speed: " + result.wind.speed + " MPH"
     currentDateEl.textContent = dateVar
-    var iconLoc = "http://openweathermap.org/img/wn/" + result.weather[0].icon + "@2x.png"
+    var iconLoc = "https://openweathermap.org/img/wn/" + result.weather[0].icon + "@2x.png"
     currentWeatherEl.setAttribute("src", iconLoc)
 }
 //This function is going to print the UV rating to the page and apply a color associated with the level
@@ -71,7 +71,7 @@ function printForecast(result) {
         forecastDate.setAttribute("class", "card-title")
         forecastBody.appendChild(forecastDate)
         var forecastIcon = document.createElement("img")
-        var iconLoc = "http://openweathermap.org/img/wn/" + result.list[i].weather[0].icon + "@2x.png"
+        var iconLoc = "https://openweathermap.org/img/wn/" + result.list[i].weather[0].icon + "@2x.png"
         forecastIcon.setAttribute("src", iconLoc)
         forecastBody.appendChild(forecastIcon)
         var forecastTemp = document.createElement("p")
@@ -89,7 +89,7 @@ function printForecast(result) {
 
 //This function is going to search Open weather for the UV index, uses latitude and longitude as inputs
 function searchUVAPI(lat, lon) {
-    var locationURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey
+    var locationURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey
     
     fetch(locationURL)
         // If API does not respond throw up an error
@@ -111,7 +111,7 @@ function searchUVAPI(lat, lon) {
 
 //This function is going to search open weather for the 5 day forecast
 function searchForecast(city) {
-    var locationURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey
+    var locationURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey
     fetch(locationURL)
         .then(function (response) {
             // If API does not respond throw up an error
@@ -135,7 +135,7 @@ function searchForecast(city) {
 // This function is going to search the Open Weather API for the fields associated with the city
 function searchWeatherApi(query) {
     var cityName = query
-    var locationURL = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial" + "&appid=" + apiKey
+    var locationURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial" + "&appid=" + apiKey
 
     searchForecast(query)
 
@@ -191,6 +191,7 @@ function createNewButton() {
     //Adds an event listener to all of the buttons printed
     recentCityList.addEventListener("click", function (event) {
         var cityName = event.target.textContent
+        cityName = cityName.toLowerCase()
         searchWeatherApi(cityName)
         var arrayLoc = storageArray.indexOf(cityName)
         storageArray.splice(arrayLoc, 1)
