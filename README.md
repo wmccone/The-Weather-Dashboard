@@ -3,4 +3,4 @@ This is Homework 6 for the UTA coding bootcamp. The goal of this homework is to 
 
 [Weather Dashboard Website](https://wmccone.github.io/WeatherDashboard_Walter_McCone/)
 
-![Weather Dashboard Image](.\assets\images\dashboard.PNG)
+![Weather Dashboard Image](assets/images/dashboard.PNG)
