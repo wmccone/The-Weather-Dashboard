@@ -5,6 +5,6 @@ This is Homework 6 for the UTA coding bootcamp. The goal of this homework is to 
 3) The current weather for the City with a color coded UV section. 
 4) A 5 day forecast for the current city.
 
-[Weather Dashboard Website](https://wmccone.github.io/WeatherDashboard_Walter_McCone/)
+[Weather Dashboard Website](https://wmccone.github.io/The-Weather-Dashboard/)
 
 ![Weather Dashboard Image](assets/images/dashboard.PNG)
